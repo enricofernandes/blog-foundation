@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>White Paper Blog</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+  <div class="max-w-3xl mx-auto px-4 py-12">
+    <h1 class="text-4xl font-bold mb-6 border-b pb-2">📚 My Classic CS Journey</h1>
+    <ul class="space-y-4">
+      {% for post in posts %}
+      <li>
+        <a href="/post/{{ post.slug }}" class="block p-4 rounded-lg bg-white shadow hover:shadow-md transition">
+          <h2 class="text-xl font-semibold">{{ post.title }}</h2>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</body>
+</html>

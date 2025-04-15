@@ -1,0 +1,3 @@
+# My Journey Begins
+
+Today I read “On Computable Numbers” by Alan Turing. It's the seed of modern computing...

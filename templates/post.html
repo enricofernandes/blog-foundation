@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Post</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+  <div class="max-w-3xl mx-auto px-4 py-12">
+    <a href="/" class="text-blue-600 hover:underline mb-6 inline-block">← Back to Posts</a>
+
+    <!-- Conteúdo do post -->
+    <article class="prose prose-lg max-w-none bg-white p-6 rounded-lg shadow mb-8">
+      {{ content|safe }}
+    </article>
+
+    <!-- Comentários -->
+    <section class="bg-white p-6 rounded-lg shadow">
+      <h2 class="text-xl font-bold mb-4">💬 Comments</h2>
+
+      <!-- Formulário -->
+      <form method="post" class="mb-6 space-y-4">
+        <input type="text" name="author" placeholder="Your name" class="w-full p-2 border rounded" required>
+        <textarea name="body" placeholder="Your comment" class="w-full p-2 border rounded h-24" required></textarea>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Submit</button>
+      </form>
+
+      <!-- Lista de comentários -->
+      {% for author, body, created_at in comments %}
+        <div class="border-t pt-4 mt-4">
+          <p class="text-sm text-gray-500">
+            <strong>{{ author }}</strong> — {{ created_at }}
+          </p>
+          <p class="mt-1">{{ body }}</p>
+        </div>
+      {% else %}
+        <p class="text-gray-500">No comments yet.</p>
+      {% endfor %}
+    </section>
+  </div>
+</body>
+</html>
