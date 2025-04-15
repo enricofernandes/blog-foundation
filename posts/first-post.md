@@ -1,3 +1,8 @@
-# My Journey Begins
+---
+title: The Complexity of Theorem-Proving Procedures
+date: 2025-04-15
+---
 
-Today I read “On Computable Numbers” by Alan Turing. It's the seed of modern computing...
+# The Complexity of Theorem-Proving Procedures
+
+Conteúdo do artigo...

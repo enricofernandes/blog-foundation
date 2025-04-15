@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://rosadafernandes.com.br/rss.xml
