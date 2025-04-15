@@ -8,21 +8,6 @@ from datetime import datetime
 app = Flask(__name__)
 
 POSTS_DIR = "posts"
-DB_PATH = "comments.db"
-
-# Initialize DB
-def init_db():
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS comments (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    slug TEXT NOT NULL,
-                    author TEXT NOT NULL,
-                    body TEXT NOT NULL,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                 )''')
-    conn.commit()
-    conn.close()
 
 # Get all posts
 def get_post_list():
@@ -48,39 +33,24 @@ def get_post_list():
     posts.sort(key=lambda x: x["date"], reverse=True)
     return posts
 
-# Get single post content
+# Get single post content and date
 def render_markdown_post(slug):
     path = os.path.join(POSTS_DIR, f"{slug}.md")
     if not os.path.exists(path):
         abort(404)
     with open(path, 'r', encoding='utf-8') as f:
-        html = markdown.markdown(f.read(), extensions=['fenced_code'])
-    return html
+        content = f.read()
 
-# Fetch comments from DB
-def get_comments(slug):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("SELECT author, body, created_at FROM comments WHERE slug = ? ORDER BY created_at DESC", (slug,))
-    comments = c.fetchall()
-    conn.close()
-    return comments
+    match = re.search(r'^---\s*title:\s*(.*?)\s*date:\s*(.*?)\s*---', content, re.MULTILINE | re.DOTALL)
+    if match:
+        content = content[match.end():].strip()
+        date_str = match.group(2).strip()
+        date = datetime.strptime(date_str, "%Y-%m-%d")
+    else:
+        date = datetime.now()
 
-# Insert new comment
-def add_comment(slug, author, body):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("INSERT INTO comments (slug, author, body) VALUES (?, ?, ?)", (slug, author, body))
-    conn.commit()
-    conn.close()
-
-# Delete all comments from a slug
-def delete_comments(slug):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("DELETE FROM comments WHERE slug = ?", (slug,))
-    conn.commit()
-    conn.close()
+    html = markdown.markdown(content, extensions=['fenced_code'])
+    return html, date
 
 @app.route("/")
 def index():
@@ -92,20 +62,10 @@ def whitepapers():
     posts = get_post_list()
     return render_template("whitepapers.html", posts=posts)
 
-@app.route("/post/<slug>", methods=["GET", "POST"])
+@app.route("/post/<slug>")
 def post(slug):
-    if request.method == "POST":
-        if request.form.get("delete") == "true":
-            delete_comments(slug)
-            return redirect(url_for("post", slug=slug))
-        author = request.form.get("author")
-        body = request.form.get("body")
-        if author and body:
-            add_comment(slug, author, body)
-            return redirect(url_for("post", slug=slug))
-    content = render_markdown_post(slug)
-    comments = get_comments(slug)
-    return render_template("post.html", content=content, slug=slug, comments=comments)
+    content, date = render_markdown_post(slug)
+    return render_template("post.html", content=content, slug=slug, date=date)
 
 @app.route("/about")
 def about():
@@ -142,5 +102,4 @@ def rss():
     return Response(rss_feed, mimetype='application/rss+xml')
 
 if __name__ == "__main__":
-    init_db()
     app.run(debug=True)

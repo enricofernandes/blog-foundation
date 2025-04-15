@@ -1,22 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>About</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 text-gray-800 font-sans">
-  <nav class="mb-8">
-    <ul class="flex space-x-6 text-lg">
-      <li><a href="/" class="text-blue-600 hover:underline">Home</a></li>
-      <li><a href="/whitepapers" class="text-blue-600 hover:underline">White Papers</a></li>
-      <li><a href="/about" class="text-blue-600 hover:underline">About</a></li>
-    </ul>
-  </nav>  
-  <div class="max-w-3xl mx-auto px-4 py-12">
-    <a href="/" class="text-blue-600 hover:underline mb-6 inline-block">← Back to Home</a>
-    <h1 class="text-3xl font-bold mb-4">👨‍💻 About This Blog</h1>
-    <p class="leading-relaxed">I’m reading one classic white paper of computer science every day and documenting what I learn here. This is a personal journey to deeply understand the foundations of computing, and to share notes and reflections as I go.</p>
-  </div>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}About - Rosada Fernandes Blog{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-4">👨‍💻 About This Blog</h1>
+<p class="leading-relaxed">Estou lendo um white paper clássico de Ciência da Computação por dia e documentando aqui o que estou aprendendo. Esta é uma jornada pessoal para entender profundamente os fundamentos da computação.</p>
+{% endblock %}
